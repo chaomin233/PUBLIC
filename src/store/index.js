@@ -1,5 +1,7 @@
 import cookie from 'js-cookie'
+import cookieKeys from '@/const/cookie-keys'
 
+const cookiePath = process.env.COOKIE_PATH
 // 最好提前在你的 store 中初始化好所有所需属性
 // https://vuex.vuejs.org/zh-cn/mutations.html
 export const state = () => ({
@@ -17,26 +19,26 @@ export const state = () => ({
 //  mutation 必须同步执行
 export const mutations = {
   login(state, payload) {
-    state.token = payload.key
-    state.userId = payload.id
-    state.tenantId = payload.tenantId
-
     // 部署不一定是在根路径, 所以cookie要设置path
-    let path = this.$router.options.base
-    cookie.set('token', payload.key, {path})
-    cookie.set('userId', payload.id, {path})
-    cookie.set('tenantId', payload.tenantId, {path})
+    cookieKeys.forEach(key => {
+      state[key] = payload[key]
+      cookie.set(key, payload[key], {
+        path: cookiePath
+      })
+    })
   },
-  logout(state) {
-    state.token = ''
-    state.userId = ''
-    state.tenantId = ''
 
-    let path = this.$router.options.base
-    cookie.remove('token', {path})
-    cookie.remove('userId', {path})
-    cookie.remove('tenantId', {path})
+  logout(state) {
+    cookieKeys.forEach(key => {
+      state[key] = ''
+      cookie.remove(key, {
+        path: cookiePath
+      })
+    })
+    // 清空state，跳转到login页的逻辑交给路由守卫
+    location.reload()
   },
+
   update(state, payload) {
     Object.keys(payload).forEach(k => {
       state[k] = payload[k]
@@ -49,40 +51,34 @@ export const mutations = {
 export const actions = {
   async login(context, payload) {
     // store 对象
-    // console.log(context)
     let {commit, state, dispatch} = context
 
-    let resp = await this.$axios.$post(`/security/api/v1/users/login`, payload)
-    commit('login', resp.payload)
+    let resp = await this.$axios.$post(
+      `/deepexi-tenant/api/v1/tenants/login`,
+      payload
+    )
 
-    dispatch('fetchUserAndMenuList', {userId: resp.payload.id})
+    const userDetail = {...resp.payload}
+    userDetail.userId = userDetail.id
+    commit('login', userDetail)
+
+    dispatch('fetchUserAndMenuList')
   },
-  async fetchUserAndMenuList({commit}, {userId}) {
-    let user = await this.$axios.$get(`/security/api/v1/users/${userId}`)
 
-    commit('update', {user: user.payload})
+  async fetchUserAndMenuList({commit}) {
+    let user = await this.$axios.$get(
+      `/deepexi-permission/api/v1/users/currentUser`
+    )
+
+    commit('update', {user: user.payload || {}})
 
     let menuResources = await this.$axios.$get(
-      `/security/api/v1/users/${userId}/menuResources`
+      `/deepexi-permission/api/v2/apps/service/userResource`
     )
-    if (!menuResources.payload)
-      menuResources.payload = {
-        menu: [],
-        permission: {}
-      }
-
-    commit('update', {
-      menuList: menuResources.payload.menu,
-      permission: menuResources.payload.permission
-    })
-  },
-  // 配置的元信息
-  async fetchMetaInfo({commit}, {projectNo}) {
-    let resp = await this.$axios.$get('/security/api/v1/configs')
-    let meta = {}
-    resp.payload.forEach(item => {
-      meta[item.key] = item.value
-    })
-    commit('update', {meta})
+    if (menuResources && menuResources.payload) {
+      commit('update', {
+        menuList: menuResources.payload
+      })
+    }
   }
 }

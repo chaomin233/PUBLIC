@@ -1,21 +1,28 @@
 require('dotenv').config()
+;['PUBLIC_PATH', 'API_SERVER', 'COOKIE_PATH', 'NO_LOGIN'].forEach(key =>
+  console.log('%s\t: %s', key, process.env[key])
+)
 
 const env = process.env
 const isProd = env.MODE == 'prod'
+const mockServer =
+  'https://easy-mock.com/mock/5c1b3895fe5907404e654045/femessage-mock'
 
 // 不能以斜杠结尾
 let apiServer = process.env.API_SERVER
 // 必须以斜杠结尾
-let publicPath = process.env.PUBLIC_PATH || 'http://cdn.deepexi.com/'
+let publicPath = process.env.PUBLIC_PATH
 
 const config = {
   aliIconFont: '',
   env: {
     mock: {
-      '/security': 'http://yapi.demo.qunar.com/mock/9638'
+      '/deepexi-tenant': mockServer,
+      '/deepexi-permission': mockServer
     },
     dev: {
-      '/security': 'http://your.dev.server'
+      '/deepexi-tenant': apiServer,
+      '/deepexi-permission': apiServer
     }
   }
 }
@@ -33,13 +40,15 @@ if (isProd && apiServer) {
 }
 
 module.exports = {
+  srcDir: 'src/',
   mode: 'spa',
   env: {
-    NO_LOGIN: process.env.NO_LOGIN
+    NO_LOGIN: process.env.NO_LOGIN,
+    COOKIE_PATH: process.env.COOKIE_PATH || '/'
   },
   proxy: config.env[env.MODE],
   router: {
-    middleware: ['meta'],
+    middleware: ['meta', 'auth'],
     mode: 'hash'
   },
   /*
@@ -51,11 +60,10 @@ module.exports = {
     babel: {
       plugins: [
         [
-          'import',
+          'component',
           {
-            libraryName: 'vant',
-            libraryDirectory: 'es',
-            style: true
+            libraryName: 'element-ui',
+            styleLibraryName: '~node_modules/@femessage/theme-deepexi/lib'
           }
         ]
       ]
@@ -78,14 +86,15 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    title: 'mobileweb',
+    title: '',
     meta: [
       {charset: 'utf-8'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {'http-equiv': 'x-ua-compatible', content: 'IE=edge, chrome=1'},
       {
         hid: 'description',
         name: 'description',
-        content: 'mobileweb'
+        content: ''
       }
     ],
     link: [
@@ -106,25 +115,33 @@ module.exports = {
    ** Customize the progress bar color
    */
   loading: {
-    color: '#1890ff'
+    color: '#5D81F9'
+  },
+  /**
+   * Share variables, mixins, functions across all style files (no @import needed)
+   * @Link https://github.com/nuxt-community/style-resources-module/
+   */
+  styleResources: {
+    less: '~assets/var.less'
   },
   css: [
     {
-      src: '~assets/global.styl',
-      lang: 'stylus'
+      src: '~assets/global.less',
+      lang: 'less'
     }
   ],
-  srcDir: 'src/',
   plugins: [
     {
       src: '~/plugins/axios'
     },
     {
-      src: '~/plugins/vant'
-    },
-    {src: '~/plugins/filter'},
-    {src: '~/plugins/components'}
+      src: '~/plugins/element'
+    }
   ],
-  modules: [['@nuxtjs/axios'], ['@nuxtjs/dotenv', {path: './'}]],
+  modules: [
+    '@nuxtjs/style-resources',
+    '@nuxtjs/axios',
+    ['@nuxtjs/dotenv', {path: './'}]
+  ],
   axios
 }
