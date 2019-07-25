@@ -2,7 +2,7 @@
  * @Author: Han
  * @Date: 2019-05-08 15:13:59
  * @Last Modified by: Han
- * @Last Modified time: 2019-05-15 15:51:46
+ * @Last Modified time: 2019-06-03 14:26:26
  * @Description 请求拦截，适配 restEasy 后端API服务框架，若数据格式不符合下面的数据格式，则会按照 httpStatusCode 正常触发对应的事件。
  * @Example
  * 适配api返回格式：

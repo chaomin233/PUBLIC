@@ -2,7 +2,7 @@
  * @Author: Han
  * @Date: 2019-05-08 14:32:04
  * @Last Modified by: Han
- * @Last Modified time: 2019-05-15 16:30:31
+ * @Last Modified time: 2019-06-04 17:22:28
  * @Description 路由鉴权中间件，实现其他路由守卫功能请新建一个中间件
  *
  * **********************************************************
@@ -47,9 +47,11 @@ export default async ({store, redirect, env, route}) => {
   if (!store.state.userId) {
     store.commit('update', cookieInfo)
     try {
+      
       await store.dispatch('fetchUserAndMenuList', {
         userId
       })
+      
     } catch (e) {
       console.error('auth error: ', e)
     }

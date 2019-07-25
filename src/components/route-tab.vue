@@ -50,6 +50,11 @@ export default {
       active: this.$route.path
     }
   },
+  watch: {
+    '$route.path'(path) {
+      this.active = path
+    }
+  },
   methods: {
     onClick() {
       this.$router.push({

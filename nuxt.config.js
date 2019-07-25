@@ -1,5 +1,5 @@
 require('dotenv').config()
-;['PUBLIC_PATH', 'API_SERVER', 'COOKIE_PATH', 'NO_LOGIN'].forEach(key =>
+;['PUBLIC_PATH', 'API_SERVER', 'NO_LOGIN', 'COOKIE_PATH'].forEach(key =>
   console.log('%s\t: %s', key, process.env[key])
 )
 
@@ -20,10 +20,10 @@ const config = {
       '/deepexi-tenant': mockServer,
       '/deepexi-permission': mockServer
     },
-    dev: {
+    dev: apiServer ? {
       '/deepexi-tenant': apiServer,
       '/deepexi-permission': apiServer
-    }
+    } : {}
   }
 }
 
@@ -56,7 +56,7 @@ module.exports = {
    */
   build: {
     publicPath,
-    extractCSS: true,
+    extractCSS: isProd,
     babel: {
       plugins: [
         [
@@ -139,9 +139,14 @@ module.exports = {
     }
   ],
   modules: [
+    // Doc: https://github.com/nuxt-community/style-resources-module
     '@nuxtjs/style-resources',
+    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    // Doc: https://github.com/nuxt-community/dotenv-module
     ['@nuxtjs/dotenv', {path: './'}]
   ],
   axios
 }
+
+

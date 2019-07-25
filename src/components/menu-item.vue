@@ -48,6 +48,8 @@ export default {
 </script>
 <style lang="less">
 .menu-item {
+  user-select: none;
+
   .menu-item-img {
     width: 16px;
     margin-right: 3px;

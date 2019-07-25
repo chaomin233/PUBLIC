@@ -23,7 +23,7 @@ export default function({store, app}) {
       }
     }
 
-    head.title = meta.htmlTitle
+    head.title = meta.appName
     link.href = meta.favicon
   }
 }

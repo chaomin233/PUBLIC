@@ -1,6 +1,3 @@
-# Notice
-This repo is no longer maintained，please use [https://github.com/FEMessage/create-nuxt-app](https://github.com/FEMessage/create-nuxt-app)
-
 # nuxt2 + element dashboard
 [![Build Status](https://travis-ci.com/levy9527/nuxt-element-dashboard.svg?branch=master)](https://travis-ci.com/levy9527/nuxt-element-dashboard)[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/levy9527/nuxt-element-dashboard/pulls)[![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
@@ -277,4 +274,4 @@ yarn build
 
 [MIT](./LICENSE)
 
-[⬆ Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents

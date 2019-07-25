@@ -2,9 +2,6 @@ const meta = {
   favicon:
     'https://deepexi.oss-cn-shenzhen.aliyuncs.com/deepexi-services/favicon32x32.png',
 
-  // html head default title
-  htmlTitle: 'Deepexi-services',
-
   // 登录表单上的图片
   logoLogin:
     'https://deepexi.oss-cn-shenzhen.aliyuncs.com/deepexi-services/logo_%E8%93%9D%E8%89%B2%E5%AD%97%E4%BD%93.svg',
@@ -18,7 +15,7 @@ const meta = {
     'https://deepexi.oss-cn-shenzhen.aliyuncs.com/deepexi-services/logo_font.svg',
 
   // 应用名称
-  appName: 'Deepexi-services',
+  appName: 'deepexi-nuxt-template',
   copyright: '滴普科技 版权所有',
 
   // 登录页背景
@@ -27,7 +24,9 @@ const meta = {
 
   // console 首页背景
   homePageImg:
-    'https://deepexi.oss-cn-shenzhen.aliyuncs.com/deepexi-services/login-bg.jpg'
+    'https://deepexi.oss-cn-shenzhen.aliyuncs.com/deepexi-services/login-bg.jpg',
+
+  
 }
 
 export default meta
